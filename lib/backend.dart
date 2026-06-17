@@ -49,7 +49,12 @@ class Backend {
 
       if (_numbers.isEmpty) return '0';
       if (_operators.isEmpty) return currentDisplay;
-      return _calculate();
+      final output = _calculate();
+      return output.isNaN
+          ? 'Cannot be Divide by 0'
+          : output % 1 == 0
+          ? output.toInt().toString()
+          : output.toString();
     }
 
     if (currentDisplay == '0' && buttonText != '.') {
@@ -64,33 +69,38 @@ class Backend {
     return '$currentDisplay$buttonText';
   }
 
-  static String _calculate() {
-    if (_numbers.isEmpty) return '0.0';
-    double result = _numbers[0];
+  static double _calculate() {
+    if (_numbers.isEmpty) return 0.0;
 
-    for (int i = 0; i < _operators.length; i++) {
-      if (i + 1 >= _numbers.length) break;
+    int i = 0;
+    while (i < _operators.length) {
+      String op = _operators[i];
 
-      switch (_operators[i]) {
-        case '+':
-          result += _numbers[i + 1];
-          break;
-        case '-':
-          result -= _numbers[i + 1];
-          break;
-        case '×':
-          result *= _numbers[i + 1];
-          break;
-        case '÷':
-          if (_numbers[i + 1] == 0) return 'Cannot Divide by 0';
-          result /= _numbers[i + 1];
-          break;
-        case '%':
-          result = result % _numbers[i + 1];
-          break;
+      if (['×', '÷', '%'].contains(op)) {
+        if (op == '×') _numbers[i] *= _numbers[i + 1];
+        if (op == '÷') {
+          if (_numbers[i + 1] == 0) return double.nan;
+          _numbers[i] /= _numbers[i + 1];
+        }
+        if (op == '%') _numbers[i] %= _numbers[i + 1];
+
+        _numbers.removeAt(i + 1);
+        _operators.removeAt(i);
+      } else {
+        i++;
       }
     }
+    i = 0;
+    while (i < _operators.length) {
+      if (_operators[i] == '+') {
+        _numbers[i] += _numbers[i + 1];
+      } else {
+        _numbers[i] -= _numbers[i + 1];
+      }
+      _numbers.removeAt(i + 1);
+      _operators.removeAt(i);
+    }
 
-    return result % 1 == 0 ? result.toInt().toString() : result.toString();
+    return _numbers[0];
   }
 }
