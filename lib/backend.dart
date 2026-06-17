@@ -33,7 +33,6 @@ class Backend {
 
     if (buttonText == '=') {
       if (currentDisplay.endsWith(' ')) return currentDisplay;
-
       List<String> tokens = currentDisplay.trim().split(' ');
 
       _numbers.clear();
@@ -57,6 +56,11 @@ class Backend {
           : output.toString();
     }
 
+    if ('00' == buttonText &&
+        ['0', ''].contains(currentDisplay.split(' ').last)) {
+      return currentDisplay;
+    }
+
     if (currentDisplay == '0' && buttonText != '.') {
       return buttonText;
     }
@@ -71,7 +75,6 @@ class Backend {
 
   static double _calculate() {
     if (_numbers.isEmpty) return 0.0;
-
     int i = 0;
     while (i < _operators.length) {
       String op = _operators[i];
@@ -83,7 +86,6 @@ class Backend {
           _numbers[i] /= _numbers[i + 1];
         }
         if (op == '%') _numbers[i] %= _numbers[i + 1];
-
         _numbers.removeAt(i + 1);
         _operators.removeAt(i);
       } else {

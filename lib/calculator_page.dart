@@ -1,4 +1,4 @@
-import 'package:calculator/backend.dart';
+import 'package:Calculator/backend.dart';
 import 'package:flutter/material.dart';
 
 class CalculatorPage extends StatefulWidget {
@@ -31,6 +31,7 @@ class _CalculatorPageState extends State<CalculatorPage> {
       '3',
       '+',
       '0',
+      '00',
       '.',
       '=',
     ];
