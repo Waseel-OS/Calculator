@@ -10,6 +10,8 @@ class CalculatorPage extends StatefulWidget {
 
 class _CalculatorPageState extends State<CalculatorPage> {
   String display = '0';
+  String? miniDisplay;
+  bool showMiniDisplay = false;
 
   @override
   Widget build(BuildContext context) {
@@ -60,6 +62,15 @@ class _CalculatorPageState extends State<CalculatorPage> {
                         fontWeight: FontWeight.w500,
                       ),
                     ),
+                    if (showMiniDisplay && miniDisplay != null)
+                      Text(
+                        miniDisplay!,
+                        style: const TextStyle(
+                          color: Colors.grey,
+                          fontSize: 24,
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
                   ],
                 ),
               ),
@@ -89,7 +100,13 @@ class _CalculatorPageState extends State<CalculatorPage> {
                   return ElevatedButton(
                     onPressed: () {
                       setState(() {
+                        if (buttonText == '=') {
+                          display = miniDisplay!;
+                          showMiniDisplay = false;
+                        }
                         display = Backend.display(display, buttonText);
+                        miniDisplay = Backend.miniDisplay(display);
+                        showMiniDisplay = Backend.showMiniDisplay;
                       });
                     },
                     style: ElevatedButton.styleFrom(
